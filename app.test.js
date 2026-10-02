@@ -1,4 +1,3 @@
-cat > app.test.js << 'EOF'
 const request = require('supertest');
 const app = require('./app');
 
@@ -15,4 +14,3 @@ describe('App routes', () => {
     expect(res.text).toBe('OK');
   });
 });
-EOF
