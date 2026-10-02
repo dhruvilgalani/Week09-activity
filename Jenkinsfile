@@ -18,11 +18,11 @@ pipeline {
       }
     }
     stage('Verify') {
-      steps {
-        sh 'sleep 15'
-        sh 'curl -f http://host.docker.internal:3000/health || curl -f http://localhost:3000/health'
-        sh 'docker service ps myapp'
-      }
-    }
+  steps {
+    sh 'sleep 15'
+    sh 'curl -f http://172.17.0.1:3000/health'
+    sh 'docker service ps myapp'
+         }
+     }
   }
 }
