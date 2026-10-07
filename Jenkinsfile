@@ -24,5 +24,11 @@ pipeline {
     sh 'docker service ps myapp'
          }
      }
+    stage('Security Scan') {
+    steps {
+        sh 'npm audit --audit-level=high || true'
+        sh 'trivy image week10-app:latest || true'
+    }
+}
   }
 }
