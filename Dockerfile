@@ -1,8 +1,9 @@
-FROM node:20-alpine
+FROM node:20-alpine            # smaller, patched base image (pin a version, not latest)
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci --omit=dev
 COPY . .
-USER node
-EXPOSE 3000
-CMD ["node", "app.js"]
+RUN addgroup -S app && adduser -S app -G app
+USER app                        # non-root
+HEALTHCHECK CMD wget -qO- http://localhost:3000/health || exit 1
+CMD ["node", "server.js"]
