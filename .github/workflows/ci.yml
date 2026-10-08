@@ -1,18 +1,15 @@
-name: CI
-on: [push, pull_request]
-jobs:
-  build-test-scan:
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
-      - run: npm ci
-      - run: npm test
-      - run: docker build -t week10-app:ci .
-      - uses: aquasecurity/trivy-action@0.28.0
-        with:
-          image-ref: week10-app:ci
-          severity: HIGH,CRITICAL
+- name: Run tests
+  run: npm test
+- name: Scan image with Trivy
+  uses: aquasecurity/trivy-action@master
+  with:
+    image-ref: your-app:${{ github.sha }}
+    severity: CRITICAL,HIGH
+    exit-code: '1'
+- name: Deploy
+  uses: appleboy/ssh-action@v1.0.3   # replaces manual SSH deploy
+  with:
+    host: ${{ secrets.HOST }}
+    username: ${{ secrets.USER }}
+    key: ${{ secrets.SSH_KEY }}
+    script: docker compose pull && docker compose up -d
